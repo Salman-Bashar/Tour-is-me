@@ -1,0 +1,15 @@
+{
+  "name": "tour-is-me",
+  "version": "1.0.0",
+  "description": "A nodeJS app for Tourism of Bangladesh",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Salman Bashar",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "joi": "^14.3.1"
+  }
+}
