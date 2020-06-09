@@ -1,70 +1,64 @@
-const Joi = require('joi');
+const { Announcement, validateAnnouncement } = require('../models/announcement');
+const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 
-//Temporary Database
-const announcements = [
-    { id: 1, title: 'Demo Post 1', details: 'asdasfdsf'},
-    { id: 2, title: 'Demo Post 2', details: 'adsgsdaghdfsg'},
-    { id: 3, title: 'Demo Post 3', details: 'asdfsdafasdfds'}
-];
 
 //Create a new announcement [Post announcement]
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const { error } = validateAnnouncement(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    const announcement = {
-        id: announcements.length + 1,
-        title: req.body.title
-    };
+    let announcement = new Announcement({
+        title: req.body.title,
+        description: req.body.description
+    });
+    announcement = await announcement.save();
 
-    announcements.push(announcement);
     res.send(announcement);
 });
 
 
 //Read announcements [View all Announcements]
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+    const announcements = await Announcement.find().sort('date');
+    
     res.send(announcements);
 });
 
 //Read a single announcement [View announcement Details]
-router.get('/:id', (req, res) => {
-    const announcement = announcements.find(a => a.id === parseInt(req.params.id));
+router.get('/:id', async (req, res) => {
+    const announcement = await Announcement.findById(req.params.id);
+
     if (!announcement) return res.status(404).send('No announcement found!');
+
     res.send(announcement);
 });
 
-//Update an announcements [Edit announcement Details]
-router.put('/:id', (req, res) => {
-    const announcement = announcements.find(a => a.id === parseInt(req.params.id));
-    if (!announcement) return res.status(404).send('No announcement found!');
-
+//Update an announcement [Edit announcement Details]
+router.put('/:id', async (req, res) => {
     const { error } = validateAnnouncement(req.body);
     if (error) return res.status(400).send(error.details[0].message);
+    
+    const announcement = await Announcement.findByIdAndUpdate(req.params.id, 
+        {
+            title: req.body.title,
+            description: req.body.description
+        }, { new: true });
 
-    announcement.title = req.body.title;
-    res.send(announcement);
-});
-
-//Delete an announcements
-router.delete('/:id', (req, res) => {
-    const announcement = announcements.find(a => a.id === parseInt(req.params.id));
     if (!announcement) return res.status(404).send('No announcement found!');
 
-    const index = announcements.indexOf(announcement)
-    announcements.splice(index, 1);
     res.send(announcement);
 });
 
-//Function to Validate Announcement Details
-function validateAnnouncement(announcement) {
-    const schema = {
-        title: Joi.string().min(6).required()
-    }
-    return Joi.validate(announcement, schema);
-};
 
+//Delete an announcement
+router.delete('/:id', async (req, res) => {
+    const Announcement = await Announcement.findByIdAndRemove(req.params.id);
+  
+    if (!announcement) return res.status(404).send('No announcement found!');
+
+    res.send(announcement);
+});
 
 module.exports = router;

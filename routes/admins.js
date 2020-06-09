@@ -1,60 +1,57 @@
-const Joi = require('joi');
+
+const { Admin, validateAdmin } = require('../models/admin');
+const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 
-//Temporary Database
-const admins = [
-    { id: 1, name: 'Badhon', email: 'salmanbadhon@gmail.com', position: 'SysAdmin'},
-    { id: 2, name: 'Samiha', email: 'afrisamiha@gmail.com', position: 'Moderator'}
-];
-
 //Create an Admin [Add Admin]
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const { error } = validateAdmin(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    const admin = {
-        id: admins.length + 1,
-        name: req.body.name
-    };
+    let admin = new Admin({
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+        level: req.body.level
+    });
+    admin = await admin.save();
 
-    admins.push(admin);
     res.send(admin);
 });
 
 
 //Read Admins [View Admin List]
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+    const admins = await Admin.find().sort('name');
     res.send(admins);
 });
 
 //Read a single Admin [View Admin Details]
-router.get('/:id', (req, res) => {
-    const admin = admins.find(a => a.id === parseInt(req.params.id)); 
-    if (!admin) return res.status(404).send('No Information Found');
+router.get('/:id', async (req, res) => {
+    const admin = await Admin.findById(req.params.id);
+
+    if (!admin) return res.status(404).send('No Admin found for the given ID!');
+
     res.send(admin);
 });
 
 //Update an Admin [Edit Admin Details]
-router.put('/:id', (req, res) => {
-    const admin = admins.find(a => a.id === parseInt(req.params.id)); 
-    if (!admin) return res.status(404).send('No Information Found');
-
+router.put('/:id', async (req, res) => {
     const { error } = validateAdmin(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    admin.name = req.body.name;
+    const admin = await Admin.findByIdAndUpdate(req.params.id, 
+        {
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+            level: req.body.level
+        }, { new: true });
+
+    if (!admin) return res.status(404).send('No Admin found for the given ID!');
+
     res.send(admin);
 });
-
-
-//Function to Validate Admin Details
-function validateAdmin(admin) {
-    const schema = {
-        name: Joi.string().min(3).required()
-    }
-    return Joi.validate(admin, schema);
-};
-
 
 module.exports = router;
