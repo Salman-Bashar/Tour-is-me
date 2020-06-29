@@ -7,19 +7,19 @@ const Member = mongoose.model('Member', new mongoose.Schema({
         type: String, 
         required: true, 
         minlength: 5, 
-        maxlength: 80
+        maxlength: 255
     },
     email: {
         type: String, 
         required: true, 
-        minlength: 7, 
-        maxlength: 80
+        minlength: 5, 
+        maxlength: 255
     },
     password: {
         type: String, 
         required: true, 
         minlength: 8, 
-        maxlength: 16
+        maxlength: 255
     },
     age: {
         type: Number, 
@@ -35,7 +35,7 @@ const Member = mongoose.model('Member', new mongoose.Schema({
         type: String, 
         required: true, 
         minlength: 5, 
-        maxlength: 80
+        maxlength: 255
     }
 }));
 
@@ -44,12 +44,12 @@ const Member = mongoose.model('Member', new mongoose.Schema({
 //Function to Validate Member Details
 function validateMember(member) {
     const schema = {
-        name: Joi.string().min(5).max(80).required(),
-        email: Joi.string().min(7).max(80).required(),
+        name: Joi.string().min(5).max(255).required(),
+        email: Joi.string().min(5).max(255).required().email(),
         password: Joi.string().min(8).max(16).required(),
         age: Joi.number().min(18).required(),
         sex: Joi.string().required(),
-        location: Joi.string().min(5).max(80).required()
+        location: Joi.string().min(5).max(255).required()
     }
     return Joi.validate(member, schema);
 };

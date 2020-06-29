@@ -9,11 +9,11 @@ router.post('/', async (req, res) => {
     const { error } = validatePost(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    let post = new Post({
+    const post = new Post({
         title: req.body.title,
         description: req.body.description
     });
-    post = await post.save();
+    await post.save();
 
     res.send(post);
 });

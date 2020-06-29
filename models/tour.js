@@ -7,24 +7,24 @@ const Tour = mongoose.model('Tour', new mongoose.Schema({
         type: String, 
         required: true, 
         minlength: 5, 
-        maxlength: 80
+        maxlength: 255
     },
     description: {
         type: String, 
         required: true, 
         minlength: 10, 
-        maxlength: 1000
+        maxlength: 9999
     },
     location: {
         type: String, 
         required: true, 
         minlength: 5, 
-        maxlength: 80
+        maxlength: 255
     },
     guide: {
         type: String,
         minlength: 5, 
-        maxlength: 80
+        maxlength: 255
     }
     //date
 }));
@@ -34,10 +34,10 @@ const Tour = mongoose.model('Tour', new mongoose.Schema({
 //Function to Validate Tour Details
 function validateTour(tour) {
     const schema = {
-        title: Joi.string().min(5).max(80).required(),
-        description: Joi.string().min(10).max(100).required(),
-        location: Joi.string().min(5).max(80).required(),
-        guide: Joi.string().min(5).max(80)
+        title: Joi.string().min(5).max(255).required(),
+        description: Joi.string().min(10).max(9999).required(),
+        location: Joi.string().min(5).max(255).required(),
+        guide: Joi.string().min(5).max(255)
     }
     return Joi.validate(tour, schema);
 };

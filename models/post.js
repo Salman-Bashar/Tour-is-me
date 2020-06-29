@@ -7,13 +7,13 @@ const Post = mongoose.model('Post', new mongoose.Schema({
         type: String, 
         required: true, 
         minlength: 5, 
-        maxlength: 80
+        maxlength: 255
     },
     description: {
         type: String, 
         required: true, 
         minlength: 10, 
-        maxlength: 1000
+        maxlength: 9999
     },
     rating: {
         type: Number,
@@ -37,8 +37,8 @@ const Post = mongoose.model('Post', new mongoose.Schema({
 //Function to Validate Post Details
 function validatePost(post) {
     const schema = {
-        title: Joi.string().min(5).max(80).required(),
-        description: Joi.string().min(10).max(100).required(),
+        title: Joi.string().min(5).max(255).required(),
+        description: Joi.string().min(10).max(9999).required(),
         rating: Joi.number(),
         views: Joi.number(),
         published: Joi.date()

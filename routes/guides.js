@@ -8,13 +8,14 @@ router.post('/', async (req, res) => {
     const { error } = validateGuide(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    let guide = new Guide ({
+    const guide = new Guide ({
         name: req.body.name,
+        phone: req.body.phone,
         email: req.body.email,
         location: req.body.location,
         sex: req.body.sex
     });
-    guide = await guide.save();
+    await guide.save();
 
     res.send(guide);
 });
@@ -43,6 +44,7 @@ router.put('/:id', async (req, res) => {
     const guide = await Guide.findByIdAndUpdate(req.params.id,
         {
             name: req.body.name,
+            phone: req.body.phone,
             email: req.body.email,
             location: req.body.location,
             sex: req.body.sex
@@ -62,6 +64,5 @@ router.delete('/:id', async (req, res) => {
 
     res.send(guide);
 });
-
 
 module.exports = router;

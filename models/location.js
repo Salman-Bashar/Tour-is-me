@@ -7,7 +7,7 @@ const Location = mongoose.model('Location', new mongoose.Schema({
         type: String, 
         required: true, 
         minlength: 5, 
-        maxlength: 80
+        maxlength: 255
     },
     type: {
         type: String, 
@@ -27,7 +27,7 @@ const Location = mongoose.model('Location', new mongoose.Schema({
 //Function to Validate Location Details
 function validateLocation(location) {
     const schema = {
-        name: Joi.string().min(5).max(80).required(),
+        name: Joi.string().min(5).max(255).required(),
         type: Joi.string().required(),
         rating: Joi.number().min(0).max(5)
     }

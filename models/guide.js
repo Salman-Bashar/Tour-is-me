@@ -7,19 +7,25 @@ const Guide = mongoose.model('Guide', new mongoose.Schema({
         type: String, 
         required: true, 
         minlength: 5, 
-        maxlength: 80
+        maxlength: 255
+    },
+    phone: {
+        type: String,
+        required: true,
+        minlength: 11,
+        maxlength:11
     },
     email: {
         type: String, 
         required: true, 
-        minlength: 7, 
-        maxlength: 80
+        minlength: 5, 
+        maxlength: 255
     },
     location: {
         type: String, 
         required: true, 
         minlength: 5, 
-        maxlength: 80
+        maxlength: 255
     },
     sex: {
         type: String, 
@@ -39,9 +45,10 @@ const Guide = mongoose.model('Guide', new mongoose.Schema({
 //Function to Validate Guide Details
 function validateGuide(guide) {
     const schema = {
-        name: Joi.string().min(5).max(80).required(),
-        email: Joi.string().min(7).max(80).required(),
-        location: Joi.string().min(5).max(80).required(),
+        name: Joi.string().min(5).max(255).required(),
+        phone: Joi.string().min(11).max(11).required(),
+        email: Joi.string().min(5).max(255).required().email(),
+        location: Joi.string().min(5).max(255).required(),
         sex: Joi.string().required(),
         rating: Joi.number().min(0).max(5)
     }

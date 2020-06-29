@@ -9,12 +9,12 @@ router.post('/', async (req, res) => {
     const { error } = validateTour(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    let tour = new Tour ({
+    const tour = new Tour ({
         title: req.body.title,
         location: req.body.location,
         description: req.body.description
     });
-    tour = await tour.save();
+    await tour.save();
 
     res.send(tour);
 });

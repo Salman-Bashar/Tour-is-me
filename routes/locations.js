@@ -9,11 +9,11 @@ router.post('/', async (req, res) => {
     const { error } = validateLocation(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    let location = new Location ({
+    const location = new Location ({
         name: req.body.name,
         type: req.body.type
     });
-    location = await location.save();
+    await location.save();
     
     res.send(location);
 });

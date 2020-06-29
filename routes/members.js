@@ -4,24 +4,6 @@ const express = require('express');
 const router = express.Router();
 
 
-//Create a new member [Registrartion]
-router.post('/', async (req, res) => {
-    const { error } = validateMember(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
-    let member = new Member( {
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-        age: req.body.age,
-        sex: req.body.sex,
-        location: req.body.location
-    });
-    member = await member.save();
-
-    res.send(member);
-});
-
 //Read all members [Member List]
 router.get('/', async (req, res) => {
     const members = await Member.find().sort('name');
@@ -29,7 +11,7 @@ router.get('/', async (req, res) => {
     res.send(members);
 });
 
-//Read a single member [Log In + Profile View]
+//Read a single member [Profile View]
 router.get('/:id', async (req, res) => {
     const member = await Member.findById(req.params.id); 
 
